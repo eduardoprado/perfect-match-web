@@ -1,37 +1,18 @@
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { width } from '@mui/system';
-import React from 'react';
-// import { BrowserRouter } from 'react-router-dom';
-import GlobalStyle from './styles/global';
-
-// import Routes from './routes';
-
-const THEME = createTheme({
-  typography: {
-    fontFamily: 'Arvo',
-    fontSize: 14,
-    fontWeightBold: 700,
-    fontWeightLight: 300,
-    fontWeightRegular: 400,
-    fontWeightMedium: 500,
-  },
-});
-
+import React, {Fragment} from 'react';
+import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import Home from './screens/Home';
+import Main from './screens/Main';
 
 function App() {
   return (
-    <GlobalStyle>
-      <div style={{
-              display: 'flex',
-              justifyContent: 'space-evenly',
-              flexDirection: 'column',
-              background: 'teal',
-              width: '100vh',
-              height: '100vh',
-            }}>
-        <h1>Helllo!</h1>
-      </div>
-    </GlobalStyle>
+    <Router>
+      <Fragment>
+        <Routes>
+          <Route element={<Home/>} path='/' />
+          <Route element={<Main/>} path='/main' />
+        </Routes>
+      </Fragment>
+    </Router>
   );
 }
 

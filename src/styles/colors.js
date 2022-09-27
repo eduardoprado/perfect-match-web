@@ -4,5 +4,6 @@ export const COLORS = {
     BLACK: '#2F242C',
     WHITE: '#F2F7F2',
     PROGRESS: '#01A7C2',
-    // your colors
+    LIKE: '#94E940',
+    DISLIKE: '#E94057',
   }
