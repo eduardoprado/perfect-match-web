@@ -11,9 +11,7 @@ export const ButtonStyled = styled.button`
     color: ${COLORS.WHITE};
     opacity: ${props => (props.disabled ? 0.6 : 1)};
 
-    padding: 2vh 2vw;
     margin: 20px;
-
     border-radius: 30px;
     
     width: ${props => (props.small ? '150px' : '300px')};

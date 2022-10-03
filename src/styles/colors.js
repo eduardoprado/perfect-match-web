@@ -6,4 +6,5 @@ export const COLORS = {
     PROGRESS: '#01A7C2',
     LIKE: '#94E940',
     DISLIKE: '#E94057',
+    LIGHT_GREY: '#D9D9D9',
   }

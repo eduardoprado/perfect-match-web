@@ -5,12 +5,7 @@ export const DisikeWrapper = styled.button`
     z-index: 1;
     background-color: ${COLORS.DISLIKE};
 
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    margin: 20px;
+    margin: ${props => props.big ? '20px' : '5px'};
     box-shadow: 0 0 10px $darkLower;
 
     height: ${props => props.big ? '100px' : '70px'};
