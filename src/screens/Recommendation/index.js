@@ -1,11 +1,45 @@
 import React from 'react';
-import { Container
-    , UsernameTitle
-    , UsernameTitleWrapper
-    , Title
-    , TitleWrapper
+import { Container,
+  UsernameTitle,
+  UsernameTitleWrapper,
+  Title,
+  TitleWrapper,
 } from './styles';
 import Card from '../../components/organism/card';
+
+const users = [
+    {
+        'username': 'Arnold Schwarzenegger',
+        'gender': 'indeterminado',
+        'pictures': [
+            'https://cdn.ome.lt/neRSu76CVHL0ObcXyumE9wAW-LQ=/fit-in/837x500/smart/uploads/conteudo/fotos/arnold_1.jpg'
+            , 'http://1.bp.blogspot.com/-4LQpBhXxUyY/T1dIgfXAr3I/AAAAAAAABgc/GZc67Pttj0Q/s280/arnold-32775_200x200.jpg'
+        ],
+        'likeability': '98,12%',
+        'ranking': '1'
+    },
+    {
+        'username': 'Brad Pitt',
+        'gender': 'homem',
+        'pictures': [
+            'https://img.r7.com/images/brad-pitt-02082022184414803?dimensions=200x200&crop_position=c'
+        ],
+        'likeability': '92,72%',
+        'ranking': '2'
+    },
+    {
+        'username': 'Scarlett Johansson',
+        'gender': 'mulher',
+        'pictures': [
+            'https://static1.purebreak.com.br/articles/4/42/04/@/23837-scarlett-johansson-200x200-2.jpg'
+            , 'https://avatarfiles.alphacoders.com/154/thumb-154087.jpg'
+            , 'https://media.vanityfair.com/photos/58dab0903753ee611fd24790/1:1/w_200,h_200,c_limit/Scarlett-Johansson.jpg'
+            , 'https://i0.wp.com/whedonsworld.com/wp-content/uploads/2020/04/scarlett.jpg?fit=200%2C200&ssl=1'
+        ],
+        'likeability': '78,12%',
+        'ranking': '3'
+    },
+]
 
 const Recommendation = () => {
 
@@ -19,30 +53,23 @@ const Recommendation = () => {
 
   return (
     <Container>
-        <UsernameTitleWrapper>
-            <UsernameTitle> Bem vindo, Eduardo</UsernameTitle>
-        </UsernameTitleWrapper>
-        <TitleWrapper>
-            <Title> Aqui estão os melhores usuários recomendados para você:</Title>
-        </TitleWrapper>
-        <Card
+      <UsernameTitleWrapper>
+        <UsernameTitle> Bem vindo, Eduardo</UsernameTitle>
+      </UsernameTitleWrapper>
+      <TitleWrapper>
+        <Title> Aqui estão os melhores usuários recomendados para você:</Title>
+      </TitleWrapper>
+      <ul>
+        {users.map((user) => 
+          <Card
             recommendation
-            username={'Dua Lipa'}
-            gender={'female'}
+            user={user}
             handleLike={handleLike}
             handleDislike={handleDislike}
-            ranking={1}
-            likeability={'98,12%'}
-            />
-         <Card
-            recommendation
-            username={'Serena Williams'}
-            gender={'female'}
-            handleLike={handleLike}
-            handleDislike={handleDislike}
-            ranking={2}
-            likeability={'93,27%'}
-            />
+            picturesIndex={0}
+          />
+        )}
+      </ul>
     </Container>
   );
 };

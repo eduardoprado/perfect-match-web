@@ -1,48 +1,47 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button } from '../../atoms/button';
 import { DisikeButton } from '../../atoms/dislikeButton';
 import { LikeButton } from '../../atoms/likeButton';
 import { Container,
-    CardName,
-    CardNameWrapper,
-    Gender,
-    GenderWrapper,
-    CardContainer,
-    RankingWrapper,
-    Ranking,
-    LikeabilityWrapper,
-    Likeability
+  CardName,
+  CardNameWrapper,
+  Gender,
+  GenderWrapper,
+  CardContainer,
+  RankingWrapper,
+  Ranking,
+  LikeabilityWrapper,
+  Likeability
 } from './styles';
 
-const Card = props => {
+const  Card = props => {
 
-    const handleMorePicture = () => {
-        console.log('OII');
-      };
+  const { user, recommendation, picturesIndex } = props;
 
   return (
-    <Container border={!!props.recommendation}>
-        {props.recommendation 
+    <Container border={!!recommendation}>
+        {recommendation 
         ? <RankingWrapper>
-            <Ranking>{props.ranking}#</Ranking>
+        <Ranking>{user.ranking}#</Ranking>
         </RankingWrapper>
         : <></>}
-        <DisikeButton big={!props.recommendation} handleClick={props.handleDislike}/>
+        <DisikeButton big={!recommendation} handleClick={props.handleDislike}/>
         <CardContainer>
             <CardNameWrapper>
-                <CardName>{props.username}</CardName>
+              <CardName>{user.username}</CardName>
             </CardNameWrapper>
+            <img src={user.pictures[picturesIndex]}/>
             <GenderWrapper>
-                <Gender>{props.gender}</Gender>
+              <Gender>{user.gender}</Gender>
             </GenderWrapper>
-            <Button text='Mais fotos' small onClick={handleMorePicture}/>
+            {!recommendation ? <Button text='Mais fotos' small onClick={props.handleMorePicture}/> : <></>}
         </CardContainer>
-        <LikeButton big={!props.recommendation} handleClick={props.handleLike}/>
-        {props.recommendation 
+        <LikeButton big={!recommendation} handleClick={props.handleLike}/>
+        {recommendation 
         ? <LikeabilityWrapper>
             <Likeability>
-                {`${props.likeability} \n
-                chance de like`}
+              {`${user.likeability} \n
+              chance de like`}
             </Likeability>
         </LikeabilityWrapper>
         : <></>}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { DisikeWrapper } from "./styles";
 import CloseIcon from '@mui/icons-material/Close';
 import { COLORS } from "../../../styles/colors";
