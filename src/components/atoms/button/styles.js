@@ -4,7 +4,7 @@ import { COLORS } from '../../../styles/colors';
 export const ButtonStyled = styled.button`
   font-weight: ${props => (props.bold ? '600': '400')};
   font-size: ${props => (props.small ? '16px' : '32px')};
-
+  opacity: ${props => (props.disabled ? 20 : 100)};
   background-color: ${props => props.color
     ? props.color
     : `${COLORS.PRIMARY}`};

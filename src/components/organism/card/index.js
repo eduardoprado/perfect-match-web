@@ -34,7 +34,15 @@ const  Card = props => {
             <GenderWrapper>
               <Gender>{user.gender}</Gender>
             </GenderWrapper>
-            {!recommendation ? <Button text='Mais fotos' small onClick={props.handleMorePicture}/> : <></>}
+            {!recommendation 
+              ? <Button
+                  disabled={user.pictures.length === 1}
+                  text='Mais fotos'
+                  small
+                  onClick={props.handleMorePicture}
+                />
+              : <></>
+            }
         </CardContainer>
         <LikeButton big={!recommendation} handleClick={props.handleLike}/>
         {recommendation 

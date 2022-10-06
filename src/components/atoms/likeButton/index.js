@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { LikeWrapper } from "./styles";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import { COLORS } from "../../../styles/colors";
