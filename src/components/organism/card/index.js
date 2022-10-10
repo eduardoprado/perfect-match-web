@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from '../../atoms/button';
+import CircularProgress from '@mui/material/CircularProgress';
 import { DisikeButton } from '../../atoms/dislikeButton';
 import { LikeButton } from '../../atoms/likeButton';
 import { Container,
@@ -11,12 +12,15 @@ import { Container,
   RankingWrapper,
   Ranking,
   LikeabilityWrapper,
-  Likeability
+  Likeability,
+  UserImage,
+  ImageWrapper,
+  CircularProgressWrapper
 } from './styles';
 
 const  Card = props => {
 
-  const { user, recommendation, picturesIndex } = props;
+  const { user, recommendation, picturesIndex, loading } = props;
 
   return (
     <Container border={!!recommendation}>
@@ -25,15 +29,27 @@ const  Card = props => {
         <Ranking>{user.ranking}#</Ranking>
         </RankingWrapper>
         : <></>}
-        <DisikeButton big={!recommendation} handleClick={props.handleDislike}/>
+        <DisikeButton
+          big={!recommendation}
+          handleClick={props.handleDislike}
+          disabled={loading}
+        />
         <CardContainer>
             <CardNameWrapper>
-              <CardName>{user.username}</CardName>
+              <CardName>{!loading && user.username}</CardName>
             </CardNameWrapper>
-            <img src={user.pictures[picturesIndex]}/>
             <GenderWrapper>
-              <Gender>{user.gender}</Gender>
+              <Gender>{!loading && user.gender}</Gender>
             </GenderWrapper>
+            <ImageWrapper>
+              <UserImage disabled={loading} src={user.pictures[picturesIndex]} alt=''/>
+
+              {loading &&
+                <CircularProgressWrapper>
+                  <CircularProgress size={64}/>
+                </CircularProgressWrapper>
+              }
+            </ImageWrapper>
             {!recommendation 
               ? <Button
                   disabled={user.pictures.length === 1}
@@ -44,7 +60,11 @@ const  Card = props => {
               : <></>
             }
         </CardContainer>
-        <LikeButton big={!recommendation} handleClick={props.handleLike}/>
+        <LikeButton
+          big={!recommendation}
+          handleClick={props.handleLike}
+          disabled={loading}
+        />
         {recommendation 
         ? <LikeabilityWrapper>
             <Likeability>

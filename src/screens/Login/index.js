@@ -1,6 +1,7 @@
 import React, { useState }  from 'react';
 import { useNavigate } from "react-router-dom";
 import { Button } from '../../components/atoms/button';
+import httpClient from '../../httpClient';
 import { Container
   , CreateAccountText, FormItem, FormItemInput, FormItemLabel, PrimaryText, QuestionsText, TextBox
 } from './styles';
@@ -22,9 +23,21 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    navigate('/main')
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const resp = await httpClient.post(`/login`, formData);
+      const id = resp.data.id;
+      const first_name = resp.data.username.split(' ').slice(0,1).join('');
+      navigate('/main', { state : {id: id, first_name: first_name}});
+    } catch (error) {
+      if (error.response.status === 401) {
+        alert("Credencias inválidas");
+      } else {
+        alert("Usuário não encontrado");
+      }
+    }
   };
 
   const handleCreateAccount = () => {

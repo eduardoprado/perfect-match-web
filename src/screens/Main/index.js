@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import Card from '../../components/organism/card';
 import PsychologyIcon from '@mui/icons-material/Psychology';
 import { Container,
@@ -15,48 +14,18 @@ import { Container,
   ProgressWrapper,
   ProgressTitle,
   ProgressText,
-  ProgressSmallText
+  ProgressSmallText,
+  DeleteTrainingButton,
+  EvaluationButtonWrapper
 } from './styles';
 import { ProgressBar } from '../../components/atoms/progressBar';
-import { useNavigate } from 'react-router-dom';
-
-// const users = [
-//     {
-//         'username': 'Arnold Schwarzenegger',
-//         'gender': 'indeterminado',
-//         'pictures': [
-//             'https://perfect-match-pictures.s3.amazonaws.com/lfw/Arnold_Schwarzenegger/Arnold_Schwarzenegger_0001.jpg'
-//             , 'https://perfect-match-pictures.s3.amazonaws.com/lfw/Arnold_Schwarzenegger/Arnold_Schwarzenegger_0002.jpg'
-//             , 'https://perfect-match-pictures.s3.amazonaws.com/lfw/Arnold_Schwarzenegger/Arnold_Schwarzenegger_0003.jpg'
-//             , 'https://perfect-match-pictures.s3.amazonaws.com/lfw/Arnold_Schwarzenegger/Arnold_Schwarzenegger_0004.jpg'
-//             , 'https://perfect-match-pictures.s3.amazonaws.com/lfw/Arnold_Schwarzenegger/Arnold_Schwarzenegger_0005.jpg'
-//             , 'https://perfect-match-pictures.s3.amazonaws.com/lfw/Arnold_Schwarzenegger/Arnold_Schwarzenegger_0006.jpg'
-//             , 'https://perfect-match-pictures.s3.amazonaws.com/lfw/Arnold_Schwarzenegger/Arnold_Schwarzenegger_0007.jpg'
-//         ]
-//     },
-//     {
-//         'username': 'Brad Pitt',
-//         'gender': 'homem',
-//         'pictures': [
-//             'https://perfect-match-pictures.s3.amazonaws.com/lfw/Brad_Pitt/Brad_Pitt_0001.jpg'
-//         ]
-//     },
-//     {
-//         'username': 'Serena Williams',
-//         'gender': 'mulher',
-//         'pictures': [
-//             'https://perfect-match-pictures.s3.amazonaws.com/lfw/Serena_Williams/Serena_Williams_0001.jpg'
-//             , 'https://perfect-match-pictures.s3.amazonaws.com/lfw/Serena_Williams/Serena_Williams_0002.jpg'
-//             , 'https://perfect-match-pictures.s3.amazonaws.com/lfw/Serena_Williams/Serena_Williams_0003.jpg'
-//             , 'https://perfect-match-pictures.s3.amazonaws.com/lfw/Serena_Williams/Serena_Williams_0004.jpg'
-//         ]
-//     },
-// ]
-
-const baseUrl = 'http://127.0.0.1:5000'
+import { useNavigate, useLocation } from 'react-router-dom';
+import httpClient from '../../httpClient';
 
 const Main = () => {
+  const {state} = useLocation();
   const [people, setPeople] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [images, setImages] = useState(0);
   const [likes, setLikes] = useState(0);
@@ -65,20 +34,52 @@ const Main = () => {
 
   const navigate = useNavigate();
 
-  const handleLike = () => {
-    setPeople(people + 1);
-    setLikes(likes + 1);
-    setImages(images + user.pictures.length);
-    setPicturesIndex(0);
-    fetchUsers(4462);
-  }
+  const handleLike = async () => {
+    const body = {
+      "user_id": state.id,
+      "user_liked_id": user.user_queue_id
+    }
 
-  const handleDislike = () => {
-    setPeople(people + 1);
-    setDislikes(dislikes + 1);
-    setImages(images + user.pictures.length);
-    setPicturesIndex(0);
-    fetchUsers(4462);
+    try {
+      setLoading(true);
+      const resp = await httpClient.post(`/like`, body);
+      const liked = resp.data;
+      if (!!liked.created_at) {
+        setPeople(people + 1);
+        setLikes(likes + 1);
+        setImages(images + user.pictures.length);
+        setPicturesIndex(0);
+        fetchUsers();
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      alert('Ocorreu um erro!');
+    }
+  };
+
+  const handleDislike = async () => {
+    const body = {
+      "user_id": state.id,
+      "user_disliked_id": user.user_queue_id
+    }
+
+    try {
+      setLoading(true);
+      const resp = await httpClient.post(`/dislike`, body);
+      const disliked = resp.data;
+      if (!!disliked.created_at) {
+        setPeople(people + 1);
+        setDislikes(dislikes + 1);
+        setImages(images + user.pictures.length);
+        setPicturesIndex(0);
+        fetchUsers();
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      alert('Ocorreu um erro!');
+    }
   }
 
   const handleMorePicture = () => {
@@ -93,22 +94,61 @@ const Main = () => {
     navigate('/train');
   }
 
-  const fetchUsers = async (user_id) => {
-    const resp = await axios.get(`${baseUrl}/queue/${user_id}`)
-    console.log("data:", resp.data);
-    const user = resp.data;
-    setUser(user);
+  const fetchUserInfo = async () => {
+    try {
+      setLoading(true);
+      const resp = await httpClient.get(`/user/${state.id}`);
+      const user_info = resp.data;
+      setPeople(user_info.total_people);
+      setImages(user_info.total_images);
+      setLikes(user_info.total_likes);
+      setDislikes(user_info.total_dislikes);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      alert('Ocorreu um erro!');
+    }
+  }
+
+  const fetchUsers = async () => {
+    try {
+      setLoading(true);
+      const resp = await httpClient.get(`/queue/${state.id}`);
+      const user = resp.data;
+      setUser(user);
+      setLoading(false)
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      alert('Ocorreu um erro!');
+    }
+  }
+
+  const deleteTraining = async () => {
+    try {
+      setLoading(true);
+      await httpClient.delete(`/delete_info/${state.id}`);
+      setPeople(0);
+      setImages(0);
+      setLikes(0);
+      setDislikes(0);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      alert('Ocorreu um erro!');
+    }
   }
 
   useEffect(() => {
-    fetchUsers(4462);
+    fetchUserInfo()
+    fetchUsers();
   }, [])
 
 
   return (
     <Container>
         <UsernameTitleWrapper>
-            <UsernameTitle> Bem vindo, Eduardo</UsernameTitle>
+            <UsernameTitle> Bem vindo, {state.first_name}</UsernameTitle>
         </UsernameTitleWrapper>
         <TitleWrapper>
             <Title> Vamos encontrar seu par ideal?</Title>
@@ -120,6 +160,7 @@ const Main = () => {
           handleMorePicture={handleMorePicture}
           handleLike={handleLike}
           handleDislike={handleDislike}
+          loading={loading}
         />}
         <EvaluationContainer>
             <ProgressWrapper>
@@ -140,10 +181,15 @@ const Main = () => {
                 <EvaluationContent>{people} pessoas</EvaluationContent>
                 <EvaluationContent>{images} imagens</EvaluationContent>
             </EvaluationTextWrapper>
-            <EvaluationButton onClick={handleTrainButton} disabled={likes < 20 | dislikes < 20}>
-                <PsychologyIcon sx={{ fontSize: 60}}/>
-                Treinar
-            </EvaluationButton>
+            <EvaluationButtonWrapper>
+              <EvaluationButton onClick={handleTrainButton} disabled={likes < 20 | dislikes < 20}>
+                  <PsychologyIcon sx={{ fontSize: 60}}/>
+                  Treinar
+              </EvaluationButton>
+              <DeleteTrainingButton onClick={deleteTraining} disabled={people === 0}>
+                Recomeçar treinamento
+              </DeleteTrainingButton>
+            </EvaluationButtonWrapper>
         </EvaluationContainer>
     </Container>
   );

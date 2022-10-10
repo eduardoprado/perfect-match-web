@@ -71,6 +71,16 @@ export const EvaluationContent = styled.h2`
   color: ${COLORS.BLACK};
 `;
 
+export const EvaluationButtonWrapper = styled.section`
+  padding: 5px;
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+`;
+
 export const EvaluationButton = styled.button`
   display: flex;
   flex-direction: column;
@@ -79,12 +89,20 @@ export const EvaluationButton = styled.button`
   width: 125px;
   height: 125px;
   border-radius: 25px;
-  margin-left: 30px;
+  margin-bottom: 30px;
   font-size: 24px;
   text-align: center;
   color: ${COLORS.WHITE};
   background: ${COLORS.PRIMARY};
-  opacity: ${props =>props.disabled ? '40%' : '100%'}
+  opacity: ${props => (props.disabled ? 0.6 : 1)};
+`;
+
+export const DeleteTrainingButton = styled.button`
+  font-size: 14px;
+  text-decoration: underline;
+  text-align: center;
+  color: ${COLORS.DISLIKE};
+  opacity: ${props => (props.disabled ? 0.6 : 1)};
 `;
 
 export const ProgressWrapper = styled.section`

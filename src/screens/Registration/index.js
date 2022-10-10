@@ -13,6 +13,7 @@ import { Container,
   RadioFormLabel,
   RadioItems,
 } from './styles';
+import httpClient from '../../httpClient';
 
 const initialFormData = Object.freeze({
   username: "",
@@ -33,9 +34,21 @@ const Registration = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    navigate('/main')
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const resp = await httpClient.post(`/register`, formData);
+      const id = resp.data.id;
+      const first_name = resp.data.username.split(' ').slice(0,1).join('');
+      console.log(id, first_name);
+      navigate('/main', { state : {id: id, first_name: first_name}});
+    } catch (error) {
+      console.log(error)
+      if (error.response.status === 401) {
+        alert("Credencias inválidas");
+      }
+    }
   };
 
   return (

@@ -11,4 +11,5 @@ export const DisikeWrapper = styled.button`
     height: ${props => props.big ? '100px' : '70px'};
     width: ${props => props.big ? '100px' : '70px'};
     border-radius: ${props => props.big ? '50px' : '35px'};
+    opacity: ${props => (props.disabled ? 0.6 : 1)};
 `;

@@ -65,3 +65,17 @@ export const LikeabilityWrapper = styled.section`
   width: 15%;
   margin-left: 15px;
 `;
+
+export const ImageWrapper = styled.section`
+  position: relative;
+`;
+
+export const CircularProgressWrapper = styled.section`
+  position: absolute;
+  left: 100;
+  top: 2;
+`;
+
+export const UserImage = styled.img `
+  opacity: ${props => (props.disabled ? 0.6 : 1)};
+`;
