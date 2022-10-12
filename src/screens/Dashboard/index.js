@@ -14,30 +14,33 @@ import { Container,
   InfoBoxText,
   InfoTextLine
 } from './styles';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '../../components/atoms/button';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import CollectionsOutlinedIcon from '@mui/icons-material/CollectionsOutlined';
 import { COLORS } from '../../styles/colors';
 import { ProgressBar } from '../../components/atoms/progressBar';
+import { LogoutButton } from '../../components/atoms/logoutButton';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const {state} = useLocation();
 
   const handleBack = (e) => {
-    navigate('/main')
+    navigate('/main', { state : {id: state.id, first_name: state.first_name}});
   };
 
   const handleFoward = (e) => {
-    navigate('/recommendation')
+    navigate('/recommendation', { state : {id: state.id, first_name: state.first_name}})
   };
 
-  const navigate = useNavigate();
 
   return (
     <Container>
+        <LogoutButton/>
         <UsernameTitleWrapper>
-            <UsernameTitle> Bem vindo, Eduardo</UsernameTitle>
+            <UsernameTitle> Bem vindo, {state && state.first_name}</UsernameTitle>
         </UsernameTitleWrapper>
         <TitleWrapper>
             <Title> Veja o desempenho do programa!</Title>
@@ -65,14 +68,27 @@ const Dashboard = () => {
             <InfoTextWrapper>
               <InfoTextLine>
                 <PersonOutlineOutlinedIcon sx={{color: COLORS.BLACK, fontSize: "24px"}}/>
-                <InfoBoxText>80 pessoas avaliadas</InfoBoxText>
+                <InfoBoxText>{state && state.people} pessoas avaliadas</InfoBoxText>
               </InfoTextLine>
               <InfoTextLine>
                 <CollectionsOutlinedIcon sx={{color: COLORS.BLACK, fontSize: "24px"}}/>
-                <InfoBoxText>124 imagens analisadas</InfoBoxText>
+                <InfoBoxText>{state && state.images} imagens analisadas</InfoBoxText>
               </InfoTextLine>
-              <ProgressBar completed={20} total={20} like nobackground/>
-              <ProgressBar completed={100} total={100} nobackground/>
+              { state && 
+              <>
+                <ProgressBar
+                  completed={state.likes/(state.likes+state.dislikes)*100}
+                  total={state.likes}
+                  like
+                  nobackground
+                />
+                <ProgressBar
+                  completed={state.dislikes/(state.likes+state.dislikes)*100}
+                  total={state.dislikes}
+                  nobackground
+                />
+              </>
+              }
             </InfoTextWrapper>
             <InfoIcon>
               <InfoOutlinedIcon sx={{color: COLORS.BLACK, fontSize: "28px"}}/>

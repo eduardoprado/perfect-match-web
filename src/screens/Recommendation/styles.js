@@ -3,8 +3,9 @@ import { COLORS } from '../../styles/colors';
 
 export const Container = styled.div`
     background: ${COLORS.WHITE};
-    height: 100%;
+    height: 350%;
     position: absolute;
+    overflow-y: scroll;
     left: 15%;
     right: 15%;
     top: 0px;
@@ -24,6 +25,7 @@ export const UsernameTitle = styled.h1`
 
 export const UsernameTitleWrapper = styled.section`
   padding: 10px 5px;
+  margin-top: 500px;
 `;
 
 export const Title = styled.h1`

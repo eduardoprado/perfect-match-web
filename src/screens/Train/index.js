@@ -5,7 +5,7 @@ import { Container,
   Title,
   TitleWrapper,
 } from './styles';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
     CircularProgressbar,
     buildStyles
@@ -16,9 +16,10 @@ import { COLORS } from '../../styles/colors';
 const Train = () => {
   const [percentage, setPercentage] = useState(0);
   const navigate = useNavigate();
+  const {state} = useLocation();
 
   if (percentage === 100)
-    navigate('/dashboard');
+    navigate('/dashboard', { state });
 
   setInterval(() => {
         setPercentage(percentage+20);

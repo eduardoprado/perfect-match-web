@@ -11,6 +11,7 @@ export const Container = styled.div`
     border-color: ${COLORS.BLACK};
     border-style: dashed;
     padding-top: 10px;
+    margin-top: 10px;
 `;
 
 export const CardContainer = styled.div`
@@ -72,8 +73,8 @@ export const ImageWrapper = styled.section`
 
 export const CircularProgressWrapper = styled.section`
   position: absolute;
-  left: 100;
-  top: 2;
+  left: 90px;
+  top: 90px;
 `;
 
 export const UserImage = styled.img `

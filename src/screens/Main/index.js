@@ -21,6 +21,7 @@ import { Container,
 import { ProgressBar } from '../../components/atoms/progressBar';
 import { useNavigate, useLocation } from 'react-router-dom';
 import httpClient from '../../httpClient';
+import { LogoutButton } from '../../components/atoms/logoutButton';
 
 const Main = () => {
   const {state} = useLocation();
@@ -91,7 +92,16 @@ const Main = () => {
   };
 
   const handleTrainButton = () => {
-    navigate('/train');
+    navigate('/train', { state :
+      {
+        id: state.id,
+        first_name: state.first_name,
+        people: people,
+        images: images,
+        likes: likes,
+        dislikes: dislikes,
+      }
+    });
   }
 
   const fetchUserInfo = async () => {
@@ -116,7 +126,7 @@ const Main = () => {
       const resp = await httpClient.get(`/queue/${state.id}`);
       const user = resp.data;
       setUser(user);
-      setLoading(false)
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -147,8 +157,9 @@ const Main = () => {
 
   return (
     <Container>
+        <LogoutButton/>
         <UsernameTitleWrapper>
-            <UsernameTitle> Bem vindo, {state.first_name}</UsernameTitle>
+            <UsernameTitle> Bem vindo, {state && state.first_name}</UsernameTitle>
         </UsernameTitleWrapper>
         <TitleWrapper>
             <Title> Vamos encontrar seu par ideal?</Title>

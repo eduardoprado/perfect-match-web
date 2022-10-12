@@ -32,7 +32,7 @@ const Login = () => {
       const first_name = resp.data.username.split(' ').slice(0,1).join('');
       navigate('/main', { state : {id: id, first_name: first_name}});
     } catch (error) {
-      if (error.response.status === 401) {
+      if (error && error.response.status === 401) {
         alert("Credencias inválidas");
       } else {
         alert("Usuário não encontrado");
