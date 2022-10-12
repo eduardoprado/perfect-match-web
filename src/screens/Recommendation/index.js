@@ -6,7 +6,7 @@ import { Container,
   TitleWrapper,
 } from './styles';
 import Card from '../../components/organism/card';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { LogoutButton } from '../../components/atoms/logoutButton';
 
 const users = [
