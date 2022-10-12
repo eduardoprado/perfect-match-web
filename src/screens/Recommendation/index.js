@@ -118,7 +118,7 @@ const users = [
 ]
 
 const Recommendation = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const {state} = useLocation();
 
   const handleLike = () => {

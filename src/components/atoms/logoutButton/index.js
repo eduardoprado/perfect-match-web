@@ -10,7 +10,7 @@ export const LogoutButton = props => {
 
   const logout = async () => {
     try {
-      const resp = await httpClient.post(`/logout`);
+      await httpClient.post(`/logout`);
       navigate('/');
     } catch (error) {
       alert("Ocorreu um erro no logout");
