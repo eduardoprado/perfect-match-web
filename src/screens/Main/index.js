@@ -142,6 +142,7 @@ const Main = () => {
       setImages(0);
       setLikes(0);
       setDislikes(0);
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       console.log(error);
