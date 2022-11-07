@@ -95,7 +95,7 @@ export const InfoIcon = styled.button`
   justify-content: center;
   align-items: center;
   border-radius: 30px;
-  background-color: ${COLORS.WHITE}
+  background-color: ${COLORS.WHITE};
 `;
 
 export const InfoBoxTitle = styled.h1`
@@ -129,4 +129,55 @@ export const InfoBoxText = styled.h2`
   font-weight: 400;
   color: ${COLORS.BLACK};
   margin-left: 5px;
+`;
+
+export const ConfusionMatrix = styled.div`
+  background: ${COLORS.WHITE};
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const MatrixColumn = styled.div`
+  width: 100px;
+  margin-left: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const MatrixLegendColumn = styled.div`
+  width: 20%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+`;
+
+export const MatrixCell = styled.div`
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+  background: rgba(113, 68, 192, ${props => props.opacity});
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const MatrixText = styled.h1`
+  font-size: 24px;
+  font-weight: 400;
+  color: ${COLORS.BLACK};
+`;
+
+export const MatrixLegend = styled.h2`
+  font-size: 14px;
+  font-weight: 400;
+  color: ${COLORS.BLACK};
+  text-align: center;
 `;

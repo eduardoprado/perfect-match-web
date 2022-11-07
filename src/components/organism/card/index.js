@@ -26,7 +26,7 @@ const  Card = props => {
     <Container border={!!recommendation}>
         {recommendation 
         ? <RankingWrapper>
-        <Ranking>{user.ranking}#</Ranking>
+        <Ranking>{user.rank}#</Ranking>
         </RankingWrapper>
         : <></>}
         <DisikeButton
@@ -68,7 +68,7 @@ const  Card = props => {
         {recommendation 
         ? <LikeabilityWrapper>
             <Likeability>
-              {`${user.likeability} \n
+              {`${user.likeability.toFixed(2)*100}% \n
               chance de like`}
             </Likeability>
         </LikeabilityWrapper>

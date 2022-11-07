@@ -8,20 +8,133 @@ import { Container,
   Box,
   GraphsRow,
   DoubleBox,
-  InfoIcon,
   InfoBoxTitle,
   UsernameTitleWrapper,
   InfoBoxText,
-  InfoTextLine
+  InfoTextLine,
+  ConfusionMatrix,
+  MatrixCell,
+  MatrixColumn,
+  MatrixText,
+  MatrixLegend,
+  MatrixLegendColumn
 } from './styles';
+import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '../../components/atoms/button';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import CollectionsOutlinedIcon from '@mui/icons-material/CollectionsOutlined';
 import { COLORS } from '../../styles/colors';
 import { ProgressBar } from '../../components/atoms/progressBar';
 import { LogoutButton } from '../../components/atoms/logoutButton';
+
+const data_accuracy = [
+  {
+    iteration: 1,
+    accuracy: 0.23,
+    val_accuracy: 0.21,
+  },
+  {
+    iteration: 2,
+    accuracy: 0.22,
+    val_accuracy: 0.24,
+  },
+  {
+    iteration: 3,
+    accuracy: 0.32,
+    val_accuracy: 0.34,
+  },
+  {
+    iteration: 4,
+    accuracy: 0.37,
+    val_accuracy: 0.43,
+  },
+  {
+    iteration: 5,
+    accuracy: 0.52,
+    val_accuracy: 0.46,
+  },
+  {
+    iteration: 6,
+    accuracy: 0.61,
+    val_accuracy: 0.51,
+  },
+  {
+    iteration: 7,
+    accuracy: 0.57,
+    val_accuracy: 0.57,
+  },
+  {
+    iteration: 8,
+    accuracy: 0.55,
+    val_accuracy: 0.58,
+  },
+  {
+    iteration: 9,
+    accuracy: 0.63,
+    val_accuracy: 0.64,
+  },
+  {
+    iteration: 10,
+    accuracy: 0.64,
+    val_accuracy: 0.69,
+  },
+  {
+    iteration: 11,
+    accuracy: 0.66,
+    val_accuracy: 0.67,
+  },
+  {
+    iteration: 12,
+    accuracy: 0.69,
+    val_accuracy: 0.71,
+  },
+  {
+    iteration: 13,
+    accuracy: 0.74,
+    val_accuracy: 0.86,
+  },
+  {
+    iteration: 14,
+    accuracy: 0.79,
+    val_accuracy: 0.89,
+  },
+  {
+    iteration: 15,
+    accuracy: 0.85,
+    val_accuracy: 0.91,
+  },
+  {
+    iteration: 16,
+    accuracy: 0.90,
+    val_accuracy: 0.90,
+  },
+  {
+    iteration: 17,
+    accuracy: 0.89,
+    val_accuracy: 0.92,
+  },
+  {
+    iteration: 18,
+    accuracy: 0.92,
+    val_accuracy: 0.9341,
+  },
+  {
+    iteration: 19,
+    accuracy: 0.95,
+    val_accuracy: 0.9312,
+  },
+];
+
+const data_loss = data_accuracy.slice().reverse()
+
+const data_matrix = {
+  "TP": 34,
+  "FP": 2,
+  "FN": 3,
+  "TN": 14,
+  "Total": 34,
+}
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -46,22 +159,79 @@ const Dashboard = () => {
             <Title> Veja o desempenho do programa!</Title>
         </TitleWrapper>
         <GraphsRow>
-          <DoubleBox>
-            <InfoIcon>
+          <Box/>
+          <Box/>
+            {/* <InfoIcon>
               <InfoOutlinedIcon sx={{color: COLORS.BLACK, fontSize: "28px"}}/>
-            </InfoIcon>
-          </DoubleBox>
+            </InfoIcon> */}
+          {/* </DoubleBox> */}
           <Box>
-            <InfoIcon>
-              <InfoOutlinedIcon sx={{color: COLORS.BLACK, fontSize: "28px"}}/>
-            </InfoIcon>
+            <ConfusionMatrix>
+              <MatrixLegendColumn>
+                <MatrixLegend>Curtidas previstas</MatrixLegend>
+                <MatrixLegend>Descurtidas previstas</MatrixLegend>
+              </MatrixLegendColumn>
+              <MatrixColumn>
+                <MatrixLegend>Curtidas verdadeiras</MatrixLegend>
+                <MatrixCell opacity={data_matrix.TP/data_matrix.Total}>
+                  <MatrixText>{data_matrix.TP}</MatrixText>
+                  <MatrixLegend>TP</MatrixLegend>
+                </MatrixCell>
+                <MatrixCell opacity={data_matrix.FN/data_matrix.Total}>
+                  <MatrixText>{data_matrix.FN}</MatrixText>
+                  <MatrixLegend>FN</MatrixLegend>
+                </MatrixCell>
+              </MatrixColumn>
+              <MatrixColumn>
+                <MatrixLegend>Descurtidas verdadeiras</MatrixLegend>
+                <MatrixCell opacity={data_matrix.FP/data_matrix.Total}>
+                  <MatrixText>{data_matrix.FP}</MatrixText>
+                  <MatrixLegend>FP</MatrixLegend>
+                </MatrixCell>
+                <MatrixCell opacity={data_matrix.TN/data_matrix.Total}>
+                  <MatrixText>{data_matrix.TN}</MatrixText>
+                  <MatrixLegend>TN</MatrixLegend>
+                </MatrixCell>
+              </MatrixColumn>
+            </ConfusionMatrix>
           </Box>
         </GraphsRow>
         <GraphsRow>
           <Box>
-            <InfoIcon>
+            <ResponsiveContainer>
+              <LineChart
+                  width={4500}
+                  height={250}
+                  data={data_accuracy}
+              >
+                <CartesianGrid strokeDasharray="4 1" />
+                <XAxis dataKey="iteration" />
+                <YAxis tickFormatter={(tick) => {
+                  return `${tick*100}%`;
+                }}/>
+                <Tooltip 
+                labelFormatter = {(label) => {
+                  return `${label}ᵃ iteração`;
+                }}
+                formatter={(value) => {
+                  const percentage_value = value*100
+                  return `${percentage_value.toFixed(2)}%`;
+                }}/>
+                <Line
+                  type="monotone"
+                  dataKey="accuracy"
+                  stroke={COLORS.PRIMARY}
+                  activeDot={{ stroke: 'red', strokeWidth: 2, r: 6 }} />
+                <Line
+                  type="monotone"
+                  dataKey="val_accuracy"
+                  stroke={COLORS.SECONDARY}
+                  activeDot={{ stroke: 'red', strokeWidth: 2, r: 6 }} />
+              </LineChart>
+            </ResponsiveContainer>
+            {/* <InfoIcon>
               <InfoOutlinedIcon sx={{color: COLORS.BLACK, fontSize: "28px"}}/>
-            </InfoIcon>
+            </InfoIcon> */}
           </Box>
           <Box>
             <InfoBoxTitle>Informações do treinamento</InfoBoxTitle>
@@ -90,14 +260,42 @@ const Dashboard = () => {
               </>
               }
             </InfoTextWrapper>
-            <InfoIcon>
+            {/* <InfoIcon>
               <InfoOutlinedIcon sx={{color: COLORS.BLACK, fontSize: "28px"}}/>
-            </InfoIcon>
+            </InfoIcon> */}
           </Box>
           <Box>
-            <InfoIcon>
-              <InfoOutlinedIcon sx={{color: COLORS.BLACK, fontSize: "28px"}}/>
-            </InfoIcon>
+            <ResponsiveContainer>
+              <LineChart
+                width={4500}
+                height={250}
+                data={data_loss}
+              >
+                <CartesianGrid strokeDasharray="4 1" />
+                <XAxis dataKey="iteration" />
+                <YAxis tickFormatter={(tick) => {
+                  return `${tick*100}%`;
+                }}/>
+                <Tooltip 
+                labelFormatter = {(label) => {
+                  return `${label}ᵃ iteração`;
+                }}
+                formatter={(value) => {
+                  const percentage_value = value*100
+                  return `${percentage_value.toFixed(2)}%`;
+                }}/>
+                <Line
+                  type="monotone"
+                  dataKey="accuracy"
+                  stroke={COLORS.PRIMARY}
+                  activeDot={{ stroke: 'red', strokeWidth: 2, r: 6 }} />
+                <Line
+                  type="monotone"
+                  dataKey="val_accuracy"
+                  stroke={COLORS.SECONDARY}
+                  activeDot={{ stroke: 'red', strokeWidth: 2, r: 6 }} />
+              </LineChart>
+            </ResponsiveContainer>
           </Box>
         </GraphsRow>
         <Footer>
