@@ -7,7 +7,6 @@ import { Container,
   Footer,
   Box,
   GraphsRow,
-  DoubleBox,
   InfoBoxTitle,
   UsernameTitleWrapper,
   InfoBoxText,
@@ -17,16 +16,36 @@ import { Container,
   MatrixColumn,
   MatrixText,
   MatrixLegend,
-  MatrixLegendColumn
+  MatrixLegendColumn,
+  RankingBox,
+  RankigBar,
+  RankigBarBox,
+  RankingText
 } from './styles';
-import { AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  LineChart,
+  Line
+} from 'recharts';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '../../components/atoms/button';
 import PersonOutlineOutlinedIcon from '@mui/icons-material/PersonOutlineOutlined';
 import CollectionsOutlinedIcon from '@mui/icons-material/CollectionsOutlined';
+import ReplayTwoToneIcon from '@mui/icons-material/ReplayTwoTone';
+import SportsScoreTwoToneIcon from '@mui/icons-material/SportsScoreTwoTone';
+import RadarOutlinedIcon from '@mui/icons-material/RadarOutlined';
 import { COLORS } from '../../styles/colors';
 import { ProgressBar } from '../../components/atoms/progressBar';
 import { LogoutButton } from '../../components/atoms/logoutButton';
+
+const data_performance = {
+  "f1_score": 0.7512,
+  "precision": 0.6412,
+  "recall": 0.7722,
+}
 
 const data_accuracy = [
   {
@@ -159,12 +178,69 @@ const Dashboard = () => {
             <Title> Veja o desempenho do programa!</Title>
         </TitleWrapper>
         <GraphsRow>
-          <Box/>
-          <Box/>
+          <Box>
+            <InfoBoxTitle>AUC - ROC</InfoBoxTitle>
+            <ResponsiveContainer>
+              <LineChart
+                  width={4500}
+                  height={250}
+                  data={data_accuracy}
+              >
+                <CartesianGrid strokeDasharray="4 1" />
+                <XAxis dataKey="iteration" />
+                <YAxis tickFormatter={(tick) => {
+                  return `${tick*100}%`;
+                }}/>
+                <Tooltip 
+                labelFormatter = {(label) => {
+                  return `${label}ᵃ iteração`;
+                }}
+                formatter={(value) => {
+                  const percentage_value = value*100
+                  return `${percentage_value.toFixed(2)}%`;
+                }}/>
+                <Line
+                  type="monotone"
+                  dataKey="accuracy"
+                  stroke={COLORS.PRIMARY}
+                  activeDot={{ stroke: 'red', strokeWidth: 2, r: 6 }} />
+                <Line
+                  type="monotone"
+                  dataKey="val_accuracy"
+                  stroke={COLORS.SECONDARY}
+                  activeDot={{ stroke: 'red', strokeWidth: 2, r: 6 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </Box>
+          <Box>
+            <InfoBoxTitle>Informações de performance</InfoBoxTitle>
+            <RankingBox>
+              <RankigBarBox>
+                <RankingText>{(data_performance.precision*100).toFixed(2)}%</RankingText>
+                <RankigBar value={data_performance.precision}>
+                  <InfoBoxText>Precisão</InfoBoxText>
+                  <RadarOutlinedIcon sx={{color: COLORS.BLACK, fontSize: "30px", marginTop: "20px"}}/>
+                </RankigBar>
+              </RankigBarBox>
+              <RankigBarBox>
+                <RankingText>{(data_performance.f1_score*100).toFixed(2)}%</RankingText>
+                <RankigBar value={data_performance.f1_score}>
+                  <InfoBoxText>F1-Score</InfoBoxText>
+                  <SportsScoreTwoToneIcon sx={{color: COLORS.BLACK, fontSize: "32px", marginTop: "20px"}}/>
+                </RankigBar>
+              </RankigBarBox>
+              <RankigBarBox>
+                <RankingText>{(data_performance.recall*100).toFixed(2)}%</RankingText>
+                <RankigBar value={data_performance.recall}>
+                  <InfoBoxText>Recall</InfoBoxText>
+                  <ReplayTwoToneIcon sx={{color: COLORS.BLACK, fontSize: "30px", marginTop: "20px"}}/>
+                </RankigBar>
+              </RankigBarBox>
+            </RankingBox>
+          </Box>
             {/* <InfoIcon>
               <InfoOutlinedIcon sx={{color: COLORS.BLACK, fontSize: "28px"}}/>
             </InfoIcon> */}
-          {/* </DoubleBox> */}
           <Box>
             <ConfusionMatrix>
               <MatrixLegendColumn>
@@ -198,6 +274,7 @@ const Dashboard = () => {
         </GraphsRow>
         <GraphsRow>
           <Box>
+            <InfoBoxTitle>Acurácia</InfoBoxTitle>
             <ResponsiveContainer>
               <LineChart
                   width={4500}
@@ -265,6 +342,7 @@ const Dashboard = () => {
             </InfoIcon> */}
           </Box>
           <Box>
+            <InfoBoxTitle>Perda</InfoBoxTitle>
             <ResponsiveContainer>
               <LineChart
                 width={4500}

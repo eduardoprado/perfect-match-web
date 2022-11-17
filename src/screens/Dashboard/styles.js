@@ -181,3 +181,39 @@ export const MatrixLegend = styled.h2`
   color: ${COLORS.BLACK};
   text-align: center;
 `;
+
+export const RankingBox = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-end;
+`;
+
+export const RankingText = styled.h1`
+  font-size: 24px;
+  font-weight: 600;
+  color: ${COLORS.PRIMARY};
+  text-align: center;
+`;
+
+export const RankigBarBox = styled.div`
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 10px 5px 0px 5px;
+`;
+
+export const RankigBar = styled.div`
+  width: 100%;
+  height: ${props => props.value && props.value*200 > 70 ? props.value*200 : 70}px;
+  padding: 5px;
+  background: rgba(229, 164, 203, ${props => props.value ? props.value + 0.2 : 1});
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+`;
