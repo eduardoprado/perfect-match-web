@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container,
   UsernameTitle,
   TitleWrapper,
@@ -28,7 +28,8 @@ import { CartesianGrid,
   Tooltip,
   ResponsiveContainer,
   LineChart,
-  Line
+  Line,
+  ReferenceLine
 } from 'recharts';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '../../components/atoms/button';
@@ -40,124 +41,13 @@ import RadarOutlinedIcon from '@mui/icons-material/RadarOutlined';
 import { COLORS } from '../../styles/colors';
 import { ProgressBar } from '../../components/atoms/progressBar';
 import { LogoutButton } from '../../components/atoms/logoutButton';
-
-const data_performance = {
-  "f1_score": 0.7512,
-  "precision": 0.6412,
-  "recall": 0.7722,
-}
-
-const data_accuracy = [
-  {
-    iteration: 1,
-    accuracy: 0.23,
-    val_accuracy: 0.21,
-  },
-  {
-    iteration: 2,
-    accuracy: 0.22,
-    val_accuracy: 0.24,
-  },
-  {
-    iteration: 3,
-    accuracy: 0.32,
-    val_accuracy: 0.34,
-  },
-  {
-    iteration: 4,
-    accuracy: 0.37,
-    val_accuracy: 0.43,
-  },
-  {
-    iteration: 5,
-    accuracy: 0.52,
-    val_accuracy: 0.46,
-  },
-  {
-    iteration: 6,
-    accuracy: 0.61,
-    val_accuracy: 0.51,
-  },
-  {
-    iteration: 7,
-    accuracy: 0.57,
-    val_accuracy: 0.57,
-  },
-  {
-    iteration: 8,
-    accuracy: 0.55,
-    val_accuracy: 0.58,
-  },
-  {
-    iteration: 9,
-    accuracy: 0.63,
-    val_accuracy: 0.64,
-  },
-  {
-    iteration: 10,
-    accuracy: 0.64,
-    val_accuracy: 0.69,
-  },
-  {
-    iteration: 11,
-    accuracy: 0.66,
-    val_accuracy: 0.67,
-  },
-  {
-    iteration: 12,
-    accuracy: 0.69,
-    val_accuracy: 0.71,
-  },
-  {
-    iteration: 13,
-    accuracy: 0.74,
-    val_accuracy: 0.86,
-  },
-  {
-    iteration: 14,
-    accuracy: 0.79,
-    val_accuracy: 0.89,
-  },
-  {
-    iteration: 15,
-    accuracy: 0.85,
-    val_accuracy: 0.91,
-  },
-  {
-    iteration: 16,
-    accuracy: 0.90,
-    val_accuracy: 0.90,
-  },
-  {
-    iteration: 17,
-    accuracy: 0.89,
-    val_accuracy: 0.92,
-  },
-  {
-    iteration: 18,
-    accuracy: 0.92,
-    val_accuracy: 0.9341,
-  },
-  {
-    iteration: 19,
-    accuracy: 0.95,
-    val_accuracy: 0.9312,
-  },
-];
-
-const data_loss = data_accuracy.slice().reverse()
-
-const data_matrix = {
-  "TP": 34,
-  "FP": 2,
-  "FN": 3,
-  "TN": 14,
-  "Total": 34,
-}
+import httpClient from '../../httpClient';
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const {state} = useLocation();
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null);
 
   const handleBack = (e) => {
     navigate('/main', { state : {id: state.id, first_name: state.first_name}});
@@ -166,6 +56,22 @@ const Dashboard = () => {
   const handleFoward = (e) => {
     navigate('/recommendation', { state : {id: state.id, first_name: state.first_name}})
   };
+
+  const fetchPerformanceInfo = async () => {
+    try {
+      setLoading(true);
+      const resp = await httpClient.get(`/performance/${state.id}`);
+      setData(resp.data);
+    } catch (error) {
+      console.log(error)
+      setLoading(false);
+      alert('Ocorreu um erro!');
+    }
+  }
+
+  useEffect(() => {
+    fetchPerformanceInfo();
+  }, [])
 
 
   return (
@@ -179,69 +85,79 @@ const Dashboard = () => {
         </TitleWrapper>
         <GraphsRow>
           <Box>
-            <InfoBoxTitle>AUC - ROC</InfoBoxTitle>
+            <InfoBoxTitle>Curva ROC</InfoBoxTitle>
+            { data &&
             <ResponsiveContainer>
               <LineChart
                   width={4500}
                   height={250}
-                  data={data_accuracy}
+                  data={data.roc_curve_data}
               >
                 <CartesianGrid strokeDasharray="4 1" />
-                <XAxis dataKey="iteration" />
-                <YAxis tickFormatter={(tick) => {
-                  return `${tick*100}%`;
-                }}/>
+                <XAxis
+                  dataKey="fpr"
+                  type="number"
+                  tickFormatter={(tick) => {
+                    return tick.toFixed(2);
+                  }}/>
+                <YAxis
+                  domain={['auto', 'auto']}
+                />
                 <Tooltip 
                 labelFormatter = {(label) => {
-                  return `${label}ᵃ iteração`;
+                  return `Taxa de falso positivo: ${label.toFixed(4)}`;
                 }}
+                label='teste'
                 formatter={(value) => {
-                  const percentage_value = value*100
-                  return `${percentage_value.toFixed(2)}%`;
+                  return [`${value.toFixed(4)}`, 'Taxa de positivos reais'];
                 }}/>
                 <Line
                   type="monotone"
-                  dataKey="accuracy"
+                  dataKey="tpr"
                   stroke={COLORS.PRIMARY}
-                  activeDot={{ stroke: 'red', strokeWidth: 2, r: 6 }} />
-                <Line
-                  type="monotone"
-                  dataKey="val_accuracy"
+                  activeDot={{ stroke: COLORS.DISLIKE, strokeWidth: 2, r: 6 }} />
+                <ReferenceLine
+                  label="Linha referência"
                   stroke={COLORS.SECONDARY}
-                  activeDot={{ stroke: 'red', strokeWidth: 2, r: 6 }} />
+                  strokeDasharray="3 3"
+                  segment={[{ x: 0, y: 0 }, { x: 1, y: 1 }]} />
               </LineChart>
             </ResponsiveContainer>
+            } 
           </Box>
           <Box>
             <InfoBoxTitle>Informações de performance</InfoBoxTitle>
+            { data &&
             <RankingBox>
               <RankigBarBox>
-                <RankingText>{(data_performance.precision*100).toFixed(2)}%</RankingText>
-                <RankigBar value={data_performance.precision}>
+                <RankingText>{(data.performance_data.precision*100).toFixed(2)}%</RankingText>
+                <RankigBar value={data.performance_data.precision}>
                   <InfoBoxText>Precisão</InfoBoxText>
                   <RadarOutlinedIcon sx={{color: COLORS.BLACK, fontSize: "30px", marginTop: "20px"}}/>
                 </RankigBar>
               </RankigBarBox>
               <RankigBarBox>
-                <RankingText>{(data_performance.f1_score*100).toFixed(2)}%</RankingText>
-                <RankigBar value={data_performance.f1_score}>
+                <RankingText>{(data.performance_data.f1_score*100).toFixed(2)}%</RankingText>
+                <RankigBar value={data.performance_data.f1_score}>
                   <InfoBoxText>F1-Score</InfoBoxText>
                   <SportsScoreTwoToneIcon sx={{color: COLORS.BLACK, fontSize: "32px", marginTop: "20px"}}/>
                 </RankigBar>
               </RankigBarBox>
               <RankigBarBox>
-                <RankingText>{(data_performance.recall*100).toFixed(2)}%</RankingText>
-                <RankigBar value={data_performance.recall}>
+                <RankingText>{(data.performance_data.recall*100).toFixed(2)}%</RankingText>
+                <RankigBar value={data.performance_data.recall}>
                   <InfoBoxText>Recall</InfoBoxText>
                   <ReplayTwoToneIcon sx={{color: COLORS.BLACK, fontSize: "30px", marginTop: "20px"}}/>
                 </RankigBar>
               </RankigBarBox>
             </RankingBox>
+            }
           </Box>
             {/* <InfoIcon>
               <InfoOutlinedIcon sx={{color: COLORS.BLACK, fontSize: "28px"}}/>
             </InfoIcon> */}
           <Box>
+            { data &&
             <ConfusionMatrix>
               <MatrixLegendColumn>
                 <MatrixLegend>Curtidas previstas</MatrixLegend>
@@ -249,43 +165,47 @@ const Dashboard = () => {
               </MatrixLegendColumn>
               <MatrixColumn>
                 <MatrixLegend>Curtidas verdadeiras</MatrixLegend>
-                <MatrixCell opacity={data_matrix.TP/data_matrix.Total}>
-                  <MatrixText>{data_matrix.TP}</MatrixText>
+                <MatrixCell opacity={data.conf_matrix_data.TP/data.conf_matrix_data.Total}>
+                  <MatrixText>{data.conf_matrix_data.TP}</MatrixText>
                   <MatrixLegend>TP</MatrixLegend>
                 </MatrixCell>
-                <MatrixCell opacity={data_matrix.FN/data_matrix.Total}>
-                  <MatrixText>{data_matrix.FN}</MatrixText>
+                <MatrixCell opacity={data.conf_matrix_data.FN/data.conf_matrix_data.Total}>
+                  <MatrixText>{data.conf_matrix_data.FN}</MatrixText>
                   <MatrixLegend>FN</MatrixLegend>
                 </MatrixCell>
               </MatrixColumn>
               <MatrixColumn>
                 <MatrixLegend>Descurtidas verdadeiras</MatrixLegend>
-                <MatrixCell opacity={data_matrix.FP/data_matrix.Total}>
-                  <MatrixText>{data_matrix.FP}</MatrixText>
+                <MatrixCell opacity={data.conf_matrix_data.FP/data.conf_matrix_data.Total}>
+                  <MatrixText>{data.conf_matrix_data.FP}</MatrixText>
                   <MatrixLegend>FP</MatrixLegend>
                 </MatrixCell>
-                <MatrixCell opacity={data_matrix.TN/data_matrix.Total}>
-                  <MatrixText>{data_matrix.TN}</MatrixText>
+                <MatrixCell opacity={data.conf_matrix_data.TN/data.conf_matrix_data.Total}>
+                  <MatrixText>{data.conf_matrix_data.TN}</MatrixText>
                   <MatrixLegend>TN</MatrixLegend>
                 </MatrixCell>
               </MatrixColumn>
             </ConfusionMatrix>
+            }
           </Box>
         </GraphsRow>
         <GraphsRow>
           <Box>
             <InfoBoxTitle>Acurácia</InfoBoxTitle>
+            { data &&
             <ResponsiveContainer>
               <LineChart
                   width={4500}
                   height={250}
-                  data={data_accuracy}
+                  data={data.data_accuracy}
               >
                 <CartesianGrid strokeDasharray="4 1" />
-                <XAxis dataKey="iteration" />
+                <XAxis dataKey="iteration"/>
                 <YAxis tickFormatter={(tick) => {
                   return `${tick*100}%`;
-                }}/>
+                }}
+                  domain={['auto', 'auto']}
+                />
                 <Tooltip 
                 labelFormatter = {(label) => {
                   return `${label}ᵃ iteração`;
@@ -298,14 +218,17 @@ const Dashboard = () => {
                   type="monotone"
                   dataKey="accuracy"
                   stroke={COLORS.PRIMARY}
-                  activeDot={{ stroke: 'red', strokeWidth: 2, r: 6 }} />
+                  dot={{r:2}}
+                  activeDot={{ stroke: COLORS.DISLIKE, strokeWidth: 2, r: 4 }} />
                 <Line
                   type="monotone"
                   dataKey="val_accuracy"
                   stroke={COLORS.SECONDARY}
-                  activeDot={{ stroke: 'red', strokeWidth: 2, r: 6 }} />
+                  dot={{r:2}}
+                  activeDot={{ stroke: COLORS.DISLIKE, strokeWidth: 2, r: 4 }} />
               </LineChart>
             </ResponsiveContainer>
+            }
             {/* <InfoIcon>
               <InfoOutlinedIcon sx={{color: COLORS.BLACK, fontSize: "28px"}}/>
             </InfoIcon> */}
@@ -343,17 +266,20 @@ const Dashboard = () => {
           </Box>
           <Box>
             <InfoBoxTitle>Perda</InfoBoxTitle>
+            { data &&
             <ResponsiveContainer>
               <LineChart
                 width={4500}
                 height={250}
-                data={data_loss}
+                data={data.data_loss}
               >
                 <CartesianGrid strokeDasharray="4 1" />
                 <XAxis dataKey="iteration" />
                 <YAxis tickFormatter={(tick) => {
                   return `${tick*100}%`;
-                }}/>
+                }}
+                  domain={['auto', 'auto']}
+                />
                 <Tooltip 
                 labelFormatter = {(label) => {
                   return `${label}ᵃ iteração`;
@@ -364,16 +290,19 @@ const Dashboard = () => {
                 }}/>
                 <Line
                   type="monotone"
-                  dataKey="accuracy"
+                  dataKey="loss"
                   stroke={COLORS.PRIMARY}
-                  activeDot={{ stroke: 'red', strokeWidth: 2, r: 6 }} />
+                  dot={{r:2}}
+                  activeDot={{ stroke: COLORS.DISLIKE, strokeWidth: 2, r: 4 }} />
                 <Line
                   type="monotone"
-                  dataKey="val_accuracy"
+                  dataKey="val_loss"
                   stroke={COLORS.SECONDARY}
-                  activeDot={{ stroke: 'red', strokeWidth: 2, r: 6 }} />
+                  dot={{r:2}}
+                  activeDot={{ stroke: COLORS.DISLIKE, strokeWidth: 2, r: 4 }} />
               </LineChart>
             </ResponsiveContainer>
+            }
           </Box>
         </GraphsRow>
         <Footer>

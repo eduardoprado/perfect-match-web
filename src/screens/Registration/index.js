@@ -41,7 +41,6 @@ const Registration = () => {
       const resp = await httpClient.post(`/register`, formData);
       const id = resp.data.id;
       const first_name = resp.data.username.split(' ').slice(0,1).join('');
-      console.log(id, first_name);
       navigate('/main', { state : {id: id, first_name: first_name}});
     } catch (error) {
       console.log(error)
