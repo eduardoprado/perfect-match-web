@@ -32,6 +32,13 @@ export const FormItem = styled.div`
   width: 100%;
 `;
 
+export const ErrorText = styled.span`
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 400;
+  color: ${COLORS.DISLIKE};
+`;
+
 export const FormItemLabel = styled.label`
   font-size: 18px;
   font-weight: 400;

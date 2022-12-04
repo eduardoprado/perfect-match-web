@@ -7,6 +7,7 @@ import Main from './screens/Main';
 import Recommendation from './screens/Recommendation';
 import Registration from './screens/Registration';
 import Train from './screens/Train';
+import Trained from './screens/Trained';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route element={<Login/>} path='/login' />
           <Route element={<Registration/>} path='/registration' />
           <Route element={<Train/>} path='/train' />
+          <Route element={<Trained/>} path='/trained' />
           <Route element={<Dashboard/>} path='/dashboard' />
           <Route element={<Recommendation/>} path='/recommendation' />
         </Routes>

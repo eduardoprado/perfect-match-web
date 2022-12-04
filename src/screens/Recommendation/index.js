@@ -9,6 +9,7 @@ import Card from '../../components/organism/card';
 import { useLocation } from 'react-router-dom';
 import { LogoutButton } from '../../components/atoms/logoutButton';
 import httpClient from '../../httpClient';
+import { CircularProgress } from '@mui/material';
 
 const Recommendation = () => {
   const {state} = useLocation();
@@ -32,7 +33,6 @@ const Recommendation = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log(error);
       alert('Ocorreu um erro!');
     }
   }
@@ -50,7 +50,7 @@ const Recommendation = () => {
       <TitleWrapper>
         <Title> Aqui estão os melhores usuários recomendados para você:</Title>
       </TitleWrapper>
-     {users && 
+     {users && !loading ?
       <ul>
         {users.map((user) => 
           <Card
@@ -61,7 +61,9 @@ const Recommendation = () => {
             picturesIndex={0}
           />
         )}
-      </ul>}
+      </ul>
+      : <CircularProgress size="40px" color="inherit"/>
+      }
     </Container>
   );
 };

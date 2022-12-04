@@ -54,7 +54,6 @@ const Main = () => {
       }
     } catch (error) {
       setLoading(false);
-      console.log(error);
       alert('Ocorreu um erro!');
     }
   };
@@ -78,7 +77,6 @@ const Main = () => {
       }
     } catch (error) {
       setLoading(false);
-      console.log(error);
       alert('Ocorreu um erro!');
     }
   }
@@ -115,7 +113,6 @@ const Main = () => {
       setDislikes(user_info.total_dislikes);
     } catch (error) {
       setLoading(false);
-      console.log(error);
       alert('Ocorreu um erro!');
     }
   }
@@ -129,7 +126,6 @@ const Main = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log(error);
       alert('Ocorreu um erro!');
     }
   }
@@ -145,7 +141,6 @@ const Main = () => {
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      console.log(error);
       alert('Ocorreu um erro!');
     }
   }

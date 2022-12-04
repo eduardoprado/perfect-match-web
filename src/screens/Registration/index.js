@@ -12,6 +12,7 @@ import { Container,
   RadioItemInput,
   RadioFormLabel,
   RadioItems,
+  ErrorText,
 } from './styles';
 import httpClient from '../../httpClient';
 
@@ -26,6 +27,8 @@ const initialFormData = Object.freeze({
 const Registration = () => {
   const navigate = useNavigate();
   const [formData, updateFormData] = useState(initialFormData);
+  const [loading, setLoading] = useState(false);
+  const [hasClickedEnter, setHasClickedEnter] = useState(false);
 
   const handleChange = (e) => {
     updateFormData({
@@ -36,16 +39,20 @@ const Registration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    try {
-      const resp = await httpClient.post(`/register`, formData);
-      const id = resp.data.id;
-      const first_name = resp.data.username.split(' ').slice(0,1).join('');
-      navigate('/main', { state : {id: id, first_name: first_name}});
-    } catch (error) {
-      console.log(error)
-      if (error.response.status === 401) {
-        alert("Credencias inválidas");
+    setHasClickedEnter(true);
+    if (formData.username !== "" && formData.email !== "" && formData.password !== "") {
+      setLoading(true);
+      try {
+        const resp = await httpClient.post(`/register`, formData);
+        const id = resp.data.id;
+        const first_name = resp.data.username.split(' ').slice(0,1).join('');
+        navigate('/main', { state : {id: id, first_name: first_name}});
+        setLoading(false);
+      } catch (error) {
+        if (error.response.status === 401) {
+          alert("Credencias inválidas");
+        }
+        setLoading(false);
       }
     }
   };
@@ -61,6 +68,11 @@ const Registration = () => {
             name="username"
             onChange={handleChange}
           />
+          {formData.username === "" &&  hasClickedEnter &&
+            <ErrorText>
+              É preciso preencher seu nome para criar conta
+            </ErrorText>
+          }
         </FormItem>
         <FormItem>
           <FormItemLabel>email:</FormItemLabel>
@@ -69,6 +81,11 @@ const Registration = () => {
             name="email"
             onChange={handleChange}
           />
+          {formData.email === "" &&  hasClickedEnter &&
+            <ErrorText>
+              É preciso preencher seu email para criar conta
+            </ErrorText>
+          }
         </FormItem>
         <FormItem>
           <FormItemLabel>senha:</FormItemLabel>
@@ -77,6 +94,11 @@ const Registration = () => {
             name="password"
             onChange={handleChange}
           />
+          {formData.password === "" &&  hasClickedEnter &&
+            <ErrorText>
+              É preciso preencher seu senha para criar conta
+            </ErrorText>
+          }
         </FormItem>
         <FormItem>
           <RadioFormLabel>gênero:</RadioFormLabel>
@@ -142,7 +164,13 @@ const Registration = () => {
             </RadioItem>
           </RadioItems>
         </FormItem>
-        <Button text='Entrar' bold onClick={handleSubmit} type="submit"/>
+        <Button
+          text='Entrar'
+          bold
+          onClick={handleSubmit}
+          type="submit"
+          loading={loading}
+        />
       </TextBox>
     </Container>
   );

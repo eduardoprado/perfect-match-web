@@ -14,8 +14,8 @@ const getButton = (Component, props) => {
       disabled={props.disabled ? props.disabled : false}
       loading={props.loading}
     >
-        {props.loading ? (
-          <CircularProgress size='16px' />
+        {props.loading === true ? (
+          <CircularProgress size='32px' color="inherit"/>
         ) : (
           props.text
         )}

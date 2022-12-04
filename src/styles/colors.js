@@ -8,4 +8,5 @@ export const COLORS = {
   LIKE: '#94E940',
   DISLIKE: '#E94057',
   LIGHT_GREY: '#D9D9D9',
+  WARNING: '#F2C94C',
 }

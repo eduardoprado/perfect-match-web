@@ -23,6 +23,13 @@ export const PrimaryText = styled.h1`
   font-size: 48px;
 `;
 
+export const ErrorText = styled.span`
+  margin-top: 5px;
+  font-size: 12px;
+  font-weight: 400;
+  color: ${COLORS.DISLIKE};
+`;
+
 export const QuestionsText = styled.span`
   margin-top: 20px;
   text-align: center;
@@ -45,6 +52,7 @@ export const FormItem = styled.div`
   align-items: left;
   padding: 10px;
   margin-top: 10px;
+  width: 100%;
 `;
 
 export const FormItemLabel = styled.label`
@@ -55,7 +63,7 @@ export const FormItemLabel = styled.label`
 `;
 
 export const FormItemInput = styled.input`
-  width: 500px;
+  width: 100%;
   height: 64px;
   background: ${COLORS.WHITE};
   border-color: ${COLORS.BLACK};

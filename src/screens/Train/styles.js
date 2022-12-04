@@ -36,3 +36,12 @@ export const TitleWrapper = styled.section`
   padding: 5px;
   margin: 50px;
 `;
+
+export const Footer = styled.div`
+  width: 80%;
+  position: fixed;
+  bottom: 0px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+`;

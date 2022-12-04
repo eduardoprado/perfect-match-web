@@ -42,6 +42,7 @@ import { COLORS } from '../../styles/colors';
 import { ProgressBar } from '../../components/atoms/progressBar';
 import { LogoutButton } from '../../components/atoms/logoutButton';
 import httpClient from '../../httpClient';
+import { CircularProgress } from '@mui/material';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -49,11 +50,15 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
 
-  const handleBack = (e) => {
+  const handleTrainMore = (e) => {
     navigate('/main', { state : {id: state.id, first_name: state.first_name}});
   };
 
-  const handleFoward = (e) => {
+  const handleTrained = (e) => {
+    navigate('/trained', { state })
+  };
+
+  const handleRecommendations = (e) => {
     navigate('/recommendation', { state : {id: state.id, first_name: state.first_name}})
   };
 
@@ -62,8 +67,8 @@ const Dashboard = () => {
       setLoading(true);
       const resp = await httpClient.get(`/performance/${state.id}`);
       setData(resp.data);
+      setLoading(false);
     } catch (error) {
-      console.log(error)
       setLoading(false);
       alert('Ocorreu um erro!');
     }
@@ -86,7 +91,7 @@ const Dashboard = () => {
         <GraphsRow>
           <Box>
             <InfoBoxTitle>Curva ROC</InfoBoxTitle>
-            { data &&
+            { data && !loading ?
             <ResponsiveContainer>
               <LineChart
                   width={4500}
@@ -123,11 +128,12 @@ const Dashboard = () => {
                   segment={[{ x: 0, y: 0 }, { x: 1, y: 1 }]} />
               </LineChart>
             </ResponsiveContainer>
+            : <CircularProgress size="40px" color="inherit"/>
             } 
           </Box>
           <Box>
             <InfoBoxTitle>Informações de performance</InfoBoxTitle>
-            { data &&
+            { data && !loading ?
             <RankingBox>
               <RankigBarBox>
                 <RankingText>{(data.performance_data.precision*100).toFixed(2)}%</RankingText>
@@ -151,13 +157,11 @@ const Dashboard = () => {
                 </RankigBar>
               </RankigBarBox>
             </RankingBox>
+            : <CircularProgress size="40px" color="inherit"/>
             }
           </Box>
-            {/* <InfoIcon>
-              <InfoOutlinedIcon sx={{color: COLORS.BLACK, fontSize: "28px"}}/>
-            </InfoIcon> */}
           <Box>
-            { data &&
+            { data && !loading ?
             <ConfusionMatrix>
               <MatrixLegendColumn>
                 <MatrixLegend>Curtidas previstas</MatrixLegend>
@@ -186,13 +190,14 @@ const Dashboard = () => {
                 </MatrixCell>
               </MatrixColumn>
             </ConfusionMatrix>
+            : <CircularProgress size="40px" color="inherit"/>
             }
           </Box>
         </GraphsRow>
         <GraphsRow>
           <Box>
             <InfoBoxTitle>Acurácia</InfoBoxTitle>
-            { data &&
+            { data && !loading ?
             <ResponsiveContainer>
               <LineChart
                   width={4500}
@@ -202,9 +207,11 @@ const Dashboard = () => {
                 <CartesianGrid strokeDasharray="4 1" />
                 <XAxis dataKey="iteration"/>
                 <YAxis tickFormatter={(tick) => {
-                  return `${tick*100}%`;
+                  const percentage_tick = tick*100
+                  return `${percentage_tick.toFixed(0)}%`;
                 }}
-                  domain={['auto', 'auto']}
+                  domain={['dataMin', 1]}
+                  ticks={[0.5,0.6,0.7,0.8,0.9,1]}
                 />
                 <Tooltip 
                 labelFormatter = {(label) => {
@@ -228,10 +235,8 @@ const Dashboard = () => {
                   activeDot={{ stroke: COLORS.DISLIKE, strokeWidth: 2, r: 4 }} />
               </LineChart>
             </ResponsiveContainer>
+            : <CircularProgress size="40px" color="inherit"/>
             }
-            {/* <InfoIcon>
-              <InfoOutlinedIcon sx={{color: COLORS.BLACK, fontSize: "28px"}}/>
-            </InfoIcon> */}
           </Box>
           <Box>
             <InfoBoxTitle>Informações do treinamento</InfoBoxTitle>
@@ -260,13 +265,10 @@ const Dashboard = () => {
               </>
               }
             </InfoTextWrapper>
-            {/* <InfoIcon>
-              <InfoOutlinedIcon sx={{color: COLORS.BLACK, fontSize: "28px"}}/>
-            </InfoIcon> */}
           </Box>
           <Box>
             <InfoBoxTitle>Perda</InfoBoxTitle>
-            { data &&
+            { data && !loading ?
             <ResponsiveContainer>
               <LineChart
                 width={4500}
@@ -276,7 +278,8 @@ const Dashboard = () => {
                 <CartesianGrid strokeDasharray="4 1" />
                 <XAxis dataKey="iteration" />
                 <YAxis tickFormatter={(tick) => {
-                  return `${tick*100}%`;
+                  const percentage_tick = tick*100
+                  return `${percentage_tick.toFixed(0)}%`;
                 }}
                   domain={['auto', 'auto']}
                 />
@@ -302,12 +305,14 @@ const Dashboard = () => {
                   activeDot={{ stroke: COLORS.DISLIKE, strokeWidth: 2, r: 4 }} />
               </LineChart>
             </ResponsiveContainer>
+            : <CircularProgress size="40px" color="inherit"/>
             }
           </Box>
         </GraphsRow>
         <Footer>
-          <Button text='Treinar mais' onClick={handleBack} small/>
-          <Button text='Ver recomendações' onClick={handleFoward} small/>
+          <Button text='Treinar mais' onClick={handleTrainMore} small/>
+          <Button text='Voltar para resumo' onClick={handleTrained} small/>
+          <Button text='Ver recomendações' onClick={handleRecommendations} small/>
         </Footer>
     </Container>
   );

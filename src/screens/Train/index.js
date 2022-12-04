@@ -1,48 +1,36 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Container,
   UsernameTitle,
   UsernameTitleWrapper,
   Title,
   TitleWrapper,
+  Footer,
 } from './styles';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {
-    CircularProgressbar,
-    buildStyles
-  } from "react-circular-progressbar";
+import { CircularProgress } from '@mui/material';
 import 'react-circular-progressbar/dist/styles.css';
-import { COLORS } from '../../styles/colors';
+import { Button } from '../../components/atoms/button';
 
 const Train = () => {
-  const [percentage, setPercentage] = useState(0);
   const navigate = useNavigate();
   const {state} = useLocation();
 
-  if (percentage === 100)
-    navigate('/dashboard', { state });
-
-  setInterval(() => {
-        setPercentage(percentage+20);
-    }, 1000);
+  const handleTrained = (e) => {
+    navigate('/trained', { state });
+  };
 
   return (
     <Container>
       <UsernameTitleWrapper>
-        <UsernameTitle> Bem vindo, Eduardo</UsernameTitle>
+        <UsernameTitle> Bem vindo, {state && state.first_name}</UsernameTitle>
       </UsernameTitleWrapper>
       <TitleWrapper>
         <Title> Encontrando seu par ideal...</Title>
       </TitleWrapper>
-        <CircularProgressbar
-          value={percentage}
-          text={`${percentage}%`}
-          styles={buildStyles({
-            strokeLinecap: "butt",
-            textColor: COLORS.PROGRESS,
-            pathColor: COLORS.PROGRESS,
-            trailColor: COLORS.PROGRESS_LIGHT,
-          })}
-        />
+      <CircularProgress size="60px" color="secondary"/>
+      <Footer>
+        <Button text='Treinado' onClick={handleTrained} opacity={0.6}/>
+      </Footer>
     </Container>
   );
 };
