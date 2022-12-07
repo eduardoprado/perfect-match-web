@@ -24,14 +24,7 @@ import { LogoutButton } from '../../components/atoms/logoutButton';
 import httpClient from '../../httpClient';
 import { CircularProgress } from '@mui/material';
 
-const status = {
-  "data": "warning",
-  "training": "failed",
-  "performance": "approved",
-  "overall": "approved"
-}
-
-const Trained = () => {
+const Summary = () => {
   const navigate = useNavigate();
   const {state} = useLocation();
   const [status, setStatus] = useState(null);
@@ -52,7 +45,7 @@ const Trained = () => {
   const fetchSummaryInfo = async () => {
     try {
       setLoading(true);
-      const resp = await httpClient.get(`/trained/${state.id}`);
+      const resp = await httpClient.get(`/summary/${state.id}`);
       setStatus(resp.data);
       setLoading(false);
     } catch (error) {
@@ -128,7 +121,7 @@ const Trained = () => {
           <SummarySection>
             {getCorrectIcon(status.performance)}
             <SummaryTextSection>
-              <SummaryTitleText>Dados de performance</SummaryTitleText>
+              <SummaryTitleText>Dados de classificação</SummaryTitleText>
               {
                 status.performance === 'approved' ?
                   <SummaryText>{TRAINED_STRINGS.performance.approved}</SummaryText> :
@@ -170,4 +163,4 @@ const Trained = () => {
   );
 };
 
-export default Trained;
+export default Summary;

@@ -7,7 +7,7 @@ export const LogoutButtonStyled = styled.button`
   top: 30px;
   padding-left: 5px;
   opacity: ${props => (props.disabled ? 20 : 100)};
-  background-color: ${COLORS.PRIMARY};
+  background-color: ${props => (props.admin ? COLORS.ADMIN_PRIMARY : COLORS.PRIMARY)};
   opacity: ${props => (props.disabled ? 0.6 : 1)};
   margin: 20px;
   border-radius: 30px;

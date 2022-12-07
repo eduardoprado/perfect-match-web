@@ -1,5 +1,14 @@
 import styled from 'styled-components';
-import { COLORS } from '../../styles/colors';
+import { COLORS } from '../../styles/colors'
+
+export const Background = styled.div`
+  background: ${props => props.admin ? COLORS.ADMIN_PRIMARY : COLORS.PRIMARY};
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+`;
 
 export const Container = styled.div`
   width: 100%;
@@ -73,4 +82,11 @@ export const FormItemInput = styled.input`
   font-size: 24px;
   color: ${COLORS.BLACK};
   margin-top: 5px;
+`;
+
+export const SwitchPosition = styled.button`
+  position: absolute;
+  right: 10px;
+  top: 30px;
+  background: ${COLORS.WHITE};
 `;

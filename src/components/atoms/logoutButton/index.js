@@ -18,7 +18,7 @@ export const LogoutButton = props => {
   }
 
   return (
-    <LogoutButtonStyled big={props.big} onClick={logout} disabled={props.disabled}>
+    <LogoutButtonStyled big={props.big} onClick={logout} disabled={props.disabled} admin={props.admin}>
         <LogoutIcon sx={{color: COLORS.WHITE, fontSize: "25px"}}/>
     </LogoutButtonStyled>
       

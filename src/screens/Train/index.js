@@ -15,8 +15,8 @@ const Train = () => {
   const navigate = useNavigate();
   const {state} = useLocation();
 
-  const handleTrained = (e) => {
-    navigate('/trained', { state });
+  const handleSummary = (e) => {
+    navigate('/summary', { state });
   };
 
   return (
@@ -29,7 +29,7 @@ const Train = () => {
       </TitleWrapper>
       <CircularProgress size="60px" color="secondary"/>
       <Footer>
-        <Button text='Treinado' onClick={handleTrained} opacity={0.6}/>
+        <Button text='Treinado' onClick={handleSummary} opacity={0.6}/>
       </Footer>
     </Container>
   );

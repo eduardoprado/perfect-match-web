@@ -7,7 +7,8 @@ import Main from './screens/Main';
 import Recommendation from './screens/Recommendation';
 import Registration from './screens/Registration';
 import Train from './screens/Train';
-import Trained from './screens/Trained';
+import Summary from './screens/Summary';
+import MainAdmin from './screens/MainAdmin';
 
 function App() {
   return (
@@ -16,10 +17,11 @@ function App() {
         <Routes>
           <Route element={<Home/>} path='/' />
           <Route element={<Main/>} path='/main' />
+          <Route element={<MainAdmin/>} path='/main-admin' />
           <Route element={<Login/>} path='/login' />
           <Route element={<Registration/>} path='/registration' />
           <Route element={<Train/>} path='/train' />
-          <Route element={<Trained/>} path='/trained' />
+          <Route element={<Summary/>} path='/summary' />
           <Route element={<Dashboard/>} path='/dashboard' />
           <Route element={<Recommendation/>} path='/recommendation' />
         </Routes>

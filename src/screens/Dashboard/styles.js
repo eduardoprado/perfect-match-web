@@ -1,6 +1,15 @@
 import styled from 'styled-components';
 import { COLORS } from '../../styles/colors';
 
+export const Background = styled.div`
+  background: ${COLORS.ADMIN_PRIMARY};
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+`;
+
 export const Container = styled.div`
   background: ${COLORS.WHITE};
   height: 100%;
@@ -30,7 +39,7 @@ export const UsernameTitleWrapper = styled.section`
 export const Title = styled.h1`
   font-size: 48px;
   text-align: center;
-  color: ${COLORS.PRIMARY};
+  color: ${COLORS.ADMIN_PRIMARY};
 `;
 
 export const TitleWrapper = styled.section`
@@ -162,7 +171,7 @@ export const MatrixCell = styled.div`
   width: 100px;
   height: 100px;
   margin: 10px;
-  background: rgba(113, 68, 192, ${props => props.opacity});
+  background: rgba(24, 109, 182, ${props => props.opacity});
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -193,7 +202,7 @@ export const RankingBox = styled.div`
 export const RankingText = styled.h1`
   font-size: 24px;
   font-weight: 600;
-  color: ${COLORS.PRIMARY};
+  color: ${COLORS.ADMIN_PRIMARY};
   text-align: center;
 `;
 
@@ -211,7 +220,7 @@ export const RankigBar = styled.div`
   width: 100%;
   height: ${props => props.value && props.value*200 > 70 ? props.value*200 : 70}px;
   padding: 5px;
-  background: rgba(229, 164, 203, ${props => props.value ? props.value + 0.2 : 1});
+  background: rgba(255, 165, 0, ${props => props.value ? props.value + 0.2 : 1});
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
