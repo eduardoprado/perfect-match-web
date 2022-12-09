@@ -102,11 +102,13 @@ const Main = () => {
       setLoading(true);
       const resp = await httpClient.post(`/model`, body);
       const model = resp.data;
+      if (!!model) {
+        navigate('/train', { state });
+      }
     } catch (error) {
       setLoading(false);
       alert('Ocorreu um erro!');
     }
-    navigate('/train', { state });
   }
 
   const fetchUserInfo = async () => {
