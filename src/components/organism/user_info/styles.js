@@ -10,12 +10,17 @@ export const Container = styled.div`
     border-radius: 20px;
     border: 2px solid ${COLORS.BLACK};
     padding: 10px;
-    margin: 20px;
+    margin: 10px;
 `;
 
 export const TextWrapper = styled.section`
   margin: 5px;
   width: 15%;
+`;
+
+export const IdWrapper = styled.section`
+  margin: 5px;
+  width: 10%;
 `;
 
 export const UserText = styled.h1`
@@ -25,6 +30,13 @@ export const UserText = styled.h1`
   font-weight: 400;
   word-wrap: break-word;
   color: ${props => (props.color ? props.color : COLORS.BLACK)};
+`;
+
+export const UserId = styled.h1`
+  font-size: 20px;
+  width: 100%;
+  text-align: center;
+  color: ${COLORS.BLACK};
 `;
 
 export const ArrowButton = styled.button`

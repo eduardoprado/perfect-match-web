@@ -34,10 +34,6 @@ const Summary = () => {
     navigate('/main', { state : {id: state.id, first_name: state.first_name}});
   };
 
-  const handleDashboard = (e) => {
-    navigate('/dashboard', { state })
-  };
-
   const handleRecommendations = (e) => {
     navigate('/recommendation', { state : {id: state.id, first_name: state.first_name}})
   };
@@ -156,7 +152,6 @@ const Summary = () => {
         }
       <Footer>
         <Button text='Treinar mais' onClick={handleTrainMore} small/>
-        <Button text='Ver resultados' onClick={handleDashboard} small/>
         <Button text='Ver recomendações' onClick={handleRecommendations} small/>
       </Footer>
     </Container>

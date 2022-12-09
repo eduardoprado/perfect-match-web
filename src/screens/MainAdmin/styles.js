@@ -45,3 +45,23 @@ export const TitleWrapper = styled.section`
   padding: 5px;
   margin: 50px;
 `;
+
+export const ListTitleContainer = styled.div`
+    width: 90%;
+    display: flex; 
+    justify-content: left;
+    align-items: center;
+`;
+
+export const TitleTextWrapper = styled.section`
+  margin: 5px;
+  width: 14%;
+`;
+
+export const ListText = styled.h1`
+  font-size: 16px;
+  width: 100%;
+  text-align: center;
+  word-wrap: break-word;
+  color: ${COLORS.BLACK};
+`;

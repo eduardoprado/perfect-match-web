@@ -52,18 +52,38 @@ const Dashboard = () => {
   const [data, setData] = useState(null);
   const [userData, setUserData] = useState(null);
 
-  const handleFail = (e) => {
-    console.log('falhou');
-    // navigate('/main-admin', { state })
+  const handleFail = async () => {
+    const body = {
+      "model_id": state.model_id,
+      "status": "failed"
+    }
+    try {
+      const resp = await httpClient.post(`/update_model/${state.id}`, body);
+      const data = resp.data;
+      console.log(data);
+    } catch (error) {
+      alert('Ocorreu um erro!');
+    }
+    navigate('/main-admin', { state })
   };
 
   const handleBack = (e) => {
     navigate('/main-admin', { state })
   };
 
-  const handleApprove = (e) => {
-    console.log('aprovado');
-    // navigate('/main-admin', { state })
+  const handleApprove = async () => {
+    const body = {
+      "model_id": state.model_id,
+      "status": "approved"
+    }
+    try {
+      const resp = await httpClient.post(`/update_model/${state.id}`, body);
+      const data = resp.data;
+      console.log(data);
+    } catch (error) {
+      alert('Ocorreu um erro!');
+    }
+    navigate('/main-admin', { state })
   };
 
   const fetchPerformanceInfo = async () => {

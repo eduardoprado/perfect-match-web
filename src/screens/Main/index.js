@@ -23,6 +23,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import httpClient from '../../httpClient';
 import { LogoutButton } from '../../components/atoms/logoutButton';
 
+
 const Main = () => {
   const {state} = useLocation();
   const [people, setPeople] = useState(0);
@@ -52,6 +53,7 @@ const Main = () => {
         setPicturesIndex(0);
         fetchUsers();
       }
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       alert('Ocorreu um erro!');
@@ -75,6 +77,7 @@ const Main = () => {
         setPicturesIndex(0);
         fetchUsers();
       }
+      setLoading(false);
     } catch (error) {
       setLoading(false);
       alert('Ocorreu um erro!');
@@ -89,17 +92,21 @@ const Main = () => {
       setPicturesIndex(picturesIndex + 1);
   };
 
-  const handleTrainButton = () => {
-    navigate('/train', { state :
-      {
-        id: state.id,
-        first_name: state.first_name,
-        people: people,
-        images: images,
-        likes: likes,
-        dislikes: dislikes,
-      }
-    });
+  const handleTrainButton = async () => {
+    const body = {
+      "user_requested_id": state.id,
+      "status": "pending"
+    }
+
+    try {
+      setLoading(true);
+      const resp = await httpClient.post(`/model`, body);
+      const model = resp.data;
+    } catch (error) {
+      setLoading(false);
+      alert('Ocorreu um erro!');
+    }
+    navigate('/train', { state });
   }
 
   const fetchUserInfo = async () => {

@@ -2,6 +2,8 @@ import React from 'react';
 import { ArrowButton, Container
   , TextWrapper
   , UserText
+  , UserId
+  , IdWrapper
 } from './styles';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { COLORS } from '../../../styles/colors';
@@ -12,20 +14,23 @@ const UserInfo = props => {
   const {state} = useLocation();
 
   const handleClick = (user_id) => {
-    console.log(user_id);
     navigate('/dashboard', { state :
       {
         id: state.id,
         first_name: state.first_name,
-        user_id: user_id
+        user_id: user_id,
+        model_id: model_id,
       }
     });
   }
 
-  const { user_id, username, gender, preference, status, time } = props;
+  const { model_id, user_id, username, gender, preference, status, time } = props;
 
   return (
     <Container >
+      <IdWrapper>
+        <UserId>{user_id}</UserId>
+      </IdWrapper>
       <TextWrapper>
         <UserText>{username}</UserText>
       </TextWrapper>
@@ -51,7 +56,7 @@ const UserInfo = props => {
       <TextWrapper>
         <UserText>{time}</UserText>
       </TextWrapper>
-      <ArrowButton onClick={() => handleClick(user_id)}>
+      <ArrowButton onClick={() => handleClick(user_id)} disabled={status==="Esperando treinamento"}>
         <ArrowForwardIosIcon sx={{color: COLORS.BLACK, fontSize: "35px"}}/>
       </ArrowButton>
     </Container>

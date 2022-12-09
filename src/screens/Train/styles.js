@@ -37,6 +37,14 @@ export const TitleWrapper = styled.section`
   margin: 50px;
 `;
 
+export const LoadingText = styled.h1`
+  font-size: 30px;
+  text-align: center;
+  font-weight: 500;
+  color: ${COLORS.BLACK};
+  margin-top: 50px;
+`;
+
 export const Footer = styled.div`
   width: 80%;
   position: fixed;

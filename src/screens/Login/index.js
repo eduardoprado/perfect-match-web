@@ -63,7 +63,7 @@ const Login = () => {
         setLoading(false);
       } catch (error) {
         setLoading(false);
-        if (error && error.response.status === 401) {
+        if (error && error.response && error.response.status === 401) {
           alert("Credencias inválidas");
         } else {
           alert("Usuário não encontrado");
